@@ -1,0 +1,20 @@
+{% extends "base_layout.html" %}
+
+{% block register %}
+
+{% if button %}
+    <form method="POST", action = "{% url 'login_view' %}">
+        {% csrf_token %}
+        {{form.as_div}}
+        <button type="submit"> {{button| default:"Login"}}</button>
+    </form>
+{% else %}
+    <form method="POST", action = "{% url 'new_user' %}">
+        {% csrf_token %}
+        {{form.as_div}}
+        <button type="submit"> {{button| default:"Register"}}</button>
+    </form>
+
+{% endif %}
+
+{% endblock register %}

@@ -6,6 +6,9 @@ from django.db.models import Avg
 from django.utils.text import slugify
 from django.conf import settings
 
+#Autorization libraries: 
+from django.contrib.auth.models import AbstractBaseUser , BaseUserManager, PermissionsMixin
+
 class Brand(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, unique=True, verbose_name="Brand Name")
@@ -73,3 +76,42 @@ class Cars(models.Model):
         '''''''''''''''''''''''''''''''''''''''''''''''''''''
         """
     
+# Custom admin panel \ autorization system block
+
+#user managing. 
+class MyUserManager(BaseUserManager):
+    # C operation for usual User
+    def create_user(self,email,password, **extra_fields):
+        email= self.normalize_email(email)
+        user=self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
+
+    # C oper for super User (admin)
+    def create_superuser(self,email,password, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(email, password, **extra_fields)
+    
+# Main class for user that could be or User or Stuff cause of "is_staff"&"is_superuser"  varuable
+class MyUser(AbstractBaseUser,PermissionsMixin):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+    email = models.EmailField(unique=True)
+    full_name = models.CharField(max_length=255)
+    is_active= models.BooleanField(default=True)
+    is_staff= models.BooleanField(default=True) 
+    is_superuser = models.BooleanField(default=True)
+    Birth_date = models.DateField(null=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ["full_name",]
+
+    objects = MyUserManager()
+
+    def __str__(self):
+        return self.email
