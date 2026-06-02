@@ -25,7 +25,8 @@ class Brand(models.Model):
 class Cars(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
-    model_name = models.CharField(max_length=255, verbose_name="Model Name")
+    # model_name = models.CharField(max_length=255, verbose_name="Model Name")
+    slug = models.SlugField()
     description = models.TextField(null=False, verbose_name="Product Description")
 
     price = models.DecimalField(
@@ -104,8 +105,9 @@ class MyUser(AbstractBaseUser,PermissionsMixin):
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=255)
     is_active= models.BooleanField(default=True)
-    is_staff= models.BooleanField(default=True) 
-    is_superuser = models.BooleanField(default=True)
+    is_staff= models.BooleanField(default=False) 
+    is_superuser = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add= True)
     Birth_date = models.DateField(null=True)
 
     USERNAME_FIELD = 'email'

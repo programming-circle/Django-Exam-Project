@@ -9,4 +9,8 @@ urlpatterns = [
     path('login-view', views.login_view, name="login_view"),
     path('logout/', views.logout_view,name="logout"),
 
+    #staff urls
+
+    path('staff/dashboard/',views.staff_dashboard,name="dashboard")
+
 ]

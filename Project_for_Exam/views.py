@@ -1,12 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from django.http import HttpRequest, HttpResponseNotAllowed
 
 
 # Auth libraries here:
 from django.contrib.auth import login , logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required
-from .forms import RegistationForm
+from django.contrib.auth.decorators import login_required , user_passes_test
+from .forms import RegistationForm, CarCreateForm 
+from .models import MyUser , Cars
+# ------------- Auth section ----------------
+ 
 
 def register_page( request: HttpRequest):
     return render(request, "register.html", {"form": RegistationForm})
@@ -43,5 +46,61 @@ def logout_view(request: HttpRequest):
 @login_required
 def auth_page(request:HttpRequest):
     return render(request, "auth.html", {"user":request.user})
+
+#------ AdminPanel dashboard 
+
+def if_staff_user(user:MyUser):
+    return user.is_staff
+
+@user_passes_test(if_staff_user, login_url='login_page')
+def staff_dashboard(request):
+    if request.method == "POST":
+        action = request.POST.get('action')
+
+        if action == "create":
+            form = CarCreateForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('dashboard')
+        elif action == "update":
+            car_id = request.POST.get('car_id')
+            car = get_object_or_404(Cars, id = car_id)
+            form = CarCreateForm(request.POST, instance=car)
+            if form.is_valid():
+                form.save()
+                return redirect('dashboard')
+            
+        elif action == "delete":
+            car_id = request.POST.get('car_id')
+            car = get_object_or_404(Cars, id = car_id)
+            car.delete
+            return redirect('dashboard')
+    cars = Cars.objects.all()
+    search_query = request.GET.get('search', '') #for searching stuff
+    if search_query:
+        cars = cars.filter(name__icontains=search_query) 
+
+
+    
+        
+    context = {
+        "cars": cars,
+        "search_query": search_query,
+        "empty_form": CarCreateForm()
+    }
+    
+    return render(request, "dashboard.html", context)
+#Update
+@user_passes_test(if_staff_user, login_url='login')
+def staff_product_update(request, id):
+    car = get_object_or_404(Cars,id=id)
+    if request.method == "POST":
+        form = ProductForm(request.POST, instance=car) 
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = ProductForm(instance=car)
+    return render(request, "staff/product_form.html", {"form": form, "title": "Updating"})
 
 # Create your views here.

@@ -2,12 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Links here: -->
+    <link type="text/css" rel="stylesheet" href="wwwroot/css/materialize.min.css"  media="screen,projection"/>
+    <!-- -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Django</title>
 </head>
 <body>
     {% block register %}{% endblock register %}
     {% block auth %}{% endblock auth %}
-    
+
+    <section>
+        {% block cards %} {% endblock cards %}
+    </section>
+
+    <section>
+        {% block dashboard %} {% endblock dashboard %}
+    </section>
+
+
+
+    <script type="text/javascript" src="js/materialize.min.js"></script>
 </body>
 </html>

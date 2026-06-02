@@ -46,7 +46,8 @@ TEMPLATES = [ # Here's nothing interesting too.
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [ BASE_DIR / 'templates',
                   BASE_DIR / 'Project_for_Exam' / 'templates' ,
-                  BASE_DIR / 'Project_for_Exam' / 'templates' / 'auth_system'],
+                  BASE_DIR / 'Project_for_Exam' / 'templates' / 'auth_system',
+                  BASE_DIR / 'Project_for_Exam' / 'templates' / 'auth_system' / 'staff'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
