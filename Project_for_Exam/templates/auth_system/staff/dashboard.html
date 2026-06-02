@@ -88,7 +88,10 @@
             <p><label>Description:</label>{{ empty_form.description }}</p>
             <p><label>Price:</label>{{ empty_form.price }}</p>
             <p><label>Discount Price:</label>{{ empty_form.discount_price }}</p>
-            <p><label>Stock:</label>{{ empty_form.stock }}</p>
+            <p>
+                <label>Stock:</label>
+                <input type="number" name="stock" min="0" required>
+            </p>
             <p>
                 <label>Image:</label>
                 <input type="file" name="image">
@@ -123,12 +126,8 @@
             <p><label>description:</label><textarea name="description" id="update_description" class="materialize-textarea"></textarea></p>
             <p>
                 <label>Current image:</label><br>
-                {% if p.image_path %}
-            <img src="{{ p.image_path.url }}" width="150">
-                {% else %}
-            <p>No image</p>
-                {% endif %}
-            </p>    
+                <span id="update_image_name"></span>
+            </p>   
             <p>
                 <label>Change image:</label>
                 <input type="file" name="image">
@@ -176,6 +175,9 @@
                 document.getElementById('update_brand').value = brandId ? brandId : "";
                 
                 document.getElementById('update_description').value = this.getAttribute('data-description');
+
+                document.getElementById('update_image_name').innerText =
+                this.getAttribute('data-image-name') || "No image";
                
                 M.updateTextFields();
                

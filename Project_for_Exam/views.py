@@ -63,7 +63,7 @@ def staff_dashboard(request):
         action = request.POST.get('action')
         # Create
         if action == "create":
-            create_form = CarCreateForm(request.POST)
+            create_form = CarCreateForm(request.POST, request.FILES)
             if create_form.is_valid():
                 car = create_form.save(commit=False)
 
@@ -82,7 +82,7 @@ def staff_dashboard(request):
         elif action == "update":
             car_id = request.POST.get('product_id')
             car = get_object_or_404(Cars, id=car_id)
-            form = CarCreateForm(request.POST, instance=car)
+            form = CarCreateForm(request.POST, request.FILES, instance=car)
             if form.is_valid():
                 car = form.save(commit=False)
 
@@ -119,7 +119,13 @@ def staff_dashboard(request):
 
 
 def main(request):
-    return render(request,"main.html")
+    cars = Cars.objects.all()
+    
+    context = {
+        "cars": cars
+    }
+    return render(request, "main.html", context)
+
 
 # @user_passes_test()
 

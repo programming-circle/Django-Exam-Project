@@ -27,7 +27,7 @@ class CarCreateForm(forms.ModelForm):
             'price': forms.NumberInput(attrs={'class':'validate', 'step':'0.01'}),
             'discount_price': forms.NumberInput(attrs={'class':'validate', 'step':'0.01'}),
             'stock': forms.NumberInput(attrs={'class':'validate', 'min':'0'}),
-            'image_path': forms.TextInput(attrs={'class':'validate'}),
+            'image_path': forms.ClearableFileInput(attrs={'class':'validate'}),
         }
 # BrandForm = forms.inlineformset_factory(
 #     Brand,
