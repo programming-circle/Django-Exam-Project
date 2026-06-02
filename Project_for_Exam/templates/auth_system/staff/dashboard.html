@@ -62,7 +62,7 @@
 </div>
 
 <div id="createForm" class="modal">
-    <form method="POST" action="">
+    <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="action" value="create">
         <div class="modal-content">
@@ -89,7 +89,10 @@
             <p><label>Price:</label>{{ empty_form.price }}</p>
             <p><label>Discount Price:</label>{{ empty_form.discount_price }}</p>
             <p><label>Stock:</label>{{ empty_form.stock }}</p>
-            <p><label>Image Path:</label>{{ empty_form.image_path }}</p>
+            <p>
+                <label>Image:</label>
+                <input type="file" name="image">
+            </p>
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-close waves-effect waves-red btn-flat">cancel</a>
@@ -99,7 +102,7 @@
 </div>
 
 <div id="updateForm" class="modal">
-    <form method="POST" action="">
+    <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="action" value="update"> 
         <input type="hidden" name="product_id" id="update_product_id"> 
@@ -118,6 +121,18 @@
                 </select>
             </p>
             <p><label>description:</label><textarea name="description" id="update_description" class="materialize-textarea"></textarea></p>
+            <p>
+                <label>Current image:</label><br>
+                {% if p.image_path %}
+            <img src="{{ p.image_path.url }}" width="150">
+                {% else %}
+            <p>No image</p>
+                {% endif %}
+            </p>    
+            <p>
+                <label>Change image:</label>
+                <input type="file" name="image">
+            </p>
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
@@ -127,7 +142,7 @@
 </div>
 
 <div id="deleteForm" class="modal">
-    <form method="POST" action="">
+    <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="action" value="delete"> <input type="hidden" name="product_id" id="delete_product_id">
         <div class="modal-content">

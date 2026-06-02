@@ -1,5 +1,7 @@
 from django.urls import path, include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('sing_up/', views.register_page, name="register_page"),
@@ -12,7 +14,12 @@ urlpatterns = [
     path('main/', views.main, name="main_page"),
 
     #staff urls
-
     path('staff/dashboard/',views.staff_dashboard,name="dashboard")
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

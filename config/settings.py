@@ -112,3 +112,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'config' / 'wwwroot',
 ]
 AUTH_USER_MODEL = 'Project_for_Exam.MyUser'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

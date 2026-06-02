@@ -65,7 +65,13 @@ def staff_dashboard(request):
         if action == "create":
             create_form = CarCreateForm(request.POST)
             if create_form.is_valid():
-                create_form.save()
+                car = create_form.save(commit=False)
+
+                image = request.FILES.get('image')
+                if image:
+                    car.image_path = image
+
+                car.save()
                 return redirect('dashboard')
             else:
                 print("--- ОШИБКА СОЗДАНИЯ МАШИНЫ ---")
@@ -78,7 +84,12 @@ def staff_dashboard(request):
             car = get_object_or_404(Cars, id=car_id)
             form = CarCreateForm(request.POST, instance=car)
             if form.is_valid():
-                form.save()
+                car = form.save(commit=False)
+
+                image = request.FILES.get('image')
+                if image:
+                    car.image_path = image
+                car.save()
                 return redirect('dashboard')
             else:
                 print("--- ОШИБКА СОЗДАНИЯ МАШИНЫ ---")

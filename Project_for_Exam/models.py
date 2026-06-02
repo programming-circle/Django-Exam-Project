@@ -52,7 +52,7 @@ class Cars(models.Model):
     )
 
     is_active = models.BooleanField(default=True)
-    image_path = models.CharField(max_length=255, null=True)
+    image_path = models.ImageField(upload_to='cars/', null=True, blank=True)
     stock = models.IntegerField(validators=[MinValueValidator(0)], default=0, verbose_name="Stok Quantity")
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
