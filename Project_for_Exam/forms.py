@@ -11,25 +11,31 @@ class CarCreateForm(forms.ModelForm):
         help_text='Enter a URL-friendly identifier.'
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Ensure brand field always has fresh queryset
+        self.fields['brand'].queryset = Brand.objects.all()
+        self.fields['brand'].widget = forms.Select(attrs={'class':'browser-default'})
+        self.fields['brand'].empty_label = 'Choose a brand'
+
     class Meta:
         model = Cars
         fields= ['name','brand','slug','description','price','discount_price','stock','image_path']
         widgets = {
             'name': forms.TextInput(attrs={'class':'validate'}),
-            'brand': forms.Select(attrs={'class':'validate'}),
             'description': forms.Textarea(attrs={'class':'validate', 'rows': 3}),
             'price': forms.NumberInput(attrs={'class':'validate', 'step':'0.01'}),
             'discount_price': forms.NumberInput(attrs={'class':'validate', 'step':'0.01'}),
             'stock': forms.NumberInput(attrs={'class':'validate', 'min':'0'}),
             'image_path': forms.TextInput(attrs={'class':'validate'}),
         }
-BrandForm = forms.inlineformset_factory(
-    Brand,
-    Cars,
-    fields=['name','slug'],
-    extra=2, #I don't know what it does on practice.. on site says it showing how many empty string show.
-    can_delete=False # This i don't understand too, it says "allow delete already existing strings
-)
+# BrandForm = forms.inlineformset_factory(
+#     Brand,
+#     Cars,
+#     fields=['name','slug'],
+#     extra=2, #I don't know what it does on practice.. on site says it showing how many empty string show.
+#     can_delete=False # This i don't understand too, it says "allow delete already existing strings
+# )
 
 
 # Update

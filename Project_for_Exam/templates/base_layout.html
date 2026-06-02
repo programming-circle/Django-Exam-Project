@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <!-- Links here: -->
-    <link type="text/css" rel="stylesheet" href="wwwroot/css/materialize.min.css"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}" media="screen,projection"/>
     <!-- -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Django</title>
@@ -22,6 +23,6 @@
 
 
 
-    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
 </body>
 </html>
