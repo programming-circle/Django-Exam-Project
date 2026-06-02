@@ -106,17 +106,10 @@ def staff_dashboard(request):
     
     return render(request, "dashboard.html", context)
 
-# #Update
-# @user_passes_test(if_staff_user, login_url='login')
-# def staff_product_update(request, id):
-#     car = get_object_or_404(Cars,id=id)
-#     if request.method == "POST":
-#         form = ProductForm(request.POST, instance=car) 
-#         if form.is_valid():
-#             form.save()
-#             return redirect('dashboard')
-#     else:
-#         form = ProductForm(instance=car)
-#     return render(request, "staff/product_form.html", {"form": form, "title": "Updating"})
+
+def main(request):
+    return render(request,"main.html")
+
+# @user_passes_test()
 
 # Create your views here.

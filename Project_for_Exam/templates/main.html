@@ -1,0 +1,30 @@
+{% extends "base_layout.html" %}
+
+{% block navbar %}
+<nav>
+  <div class="nav-wrapper">
+    <a href="#" class="brand-logo">CarShop</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      
+      {% if user.is_authenticated %}
+        <li><span>Hi, {{ user.full_name }}!</span></li>
+        
+        {% if user.is_staff %}
+          <li><a href="{% url 'dashboard' %}">Admin panel</a></li>
+        {% endif %}
+        
+        <li><a href="{% url 'logout' %}">Выйти</a></li>
+      
+      {% else %}
+        <li><a href="{% url 'login_page' %}">Войти</a></li>
+        <li><a href="{% url 'register_page' %}">Регистрация</a></li>
+      {% endif %}
+
+    </ul>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<!-- Main content goes here -->
+{% endblock content %}

@@ -10,19 +10,10 @@
     <title>Django</title>
 </head>
 <body>
-    {% block register %}{% endblock register %}
-    {% block auth %}{% endblock auth %}
-
-    <section>
-        {% block cards %} {% endblock cards %}
-    </section>
-
-    <section>
-        {% block dashboard %} {% endblock dashboard %}
-    </section>
-
-
-
+    {% block navbar %}{% endblock %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
     <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
 </body>
 </html>
