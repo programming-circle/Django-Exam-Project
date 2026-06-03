@@ -13,7 +13,6 @@ from django.contrib.auth.models import AbstractBaseUser , BaseUserManager, Permi
 class Brand(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, unique=True, verbose_name="Brand Name")
-    slug = models.SlugField(max_length=100, unique=True, blank=True)
 
     class Meta:
         db_table = 'dj_brands'
