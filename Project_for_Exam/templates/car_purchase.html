@@ -55,6 +55,14 @@
             padding: 20px;
             border-radius: 8px;
         }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 500;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -83,8 +91,28 @@
                                 {{ car.description }}
                             </p>
                             <hr style="border-color: rgba(255,255,255,0.1);">
-                            <p style="margin-top: 15px;"><label class="white-text"><i class="material-icons left tiny"></i>Added:</label> {{ car.created_at|date:"d.m.Y" }}</p>
-                            <p><label class="white-text"><i class="material-icons left tiny"></i>Stock:</label> {% if car.stock > 0 %} in stock ({{ car.stock }} pcs.){% else %}Немає в наявності{% endif %}</p>
+                            
+                            <p style="margin-top: 15px;">
+                                <label class="white-text">
+                                    <i class="material-icons left tiny">date_range</i>Added:
+                                </label> 
+                                {{ car.created_at|date:"d.m.Y" }}
+                            </p>
+                            
+                            <p style="margin-top: 10px;">
+                                <label class="white-text">
+                                    <i class="material-icons left tiny">store</i>Stock:
+                                </label>
+                                {% if car.stock > 0 %}
+                                    <span class="status-badge green white-text" style="margin-top: 0; padding: 2px 6px;">
+                                        In stock ({{ car.stock }} pcs.)
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge red white-text" style="margin-top: 0; padding: 2px 6px;">
+                                        Not available
+                                    </span>
+                                {% endif %}
+                            </p>
                         </div>
 
                         <div class="price-display center-align">
@@ -97,7 +125,6 @@
                                 {% endif %}
                             </h4>
                         </div>
-                        <div></div>
                     </div>
 
                     <div class="col s12 m7 white form-side">
@@ -105,7 +132,7 @@
                             Placing an order
                         </h5>
                         
-                        <form action="" method="POST">
+                        <form action="{% url 'car_purchase' car.slug %}" method="POST">
                             {% csrf_token %} 
                             <div class="row">
                                 <div class="input-field col s12 m6">
@@ -146,7 +173,7 @@
 
                             <div class="row" style="margin-bottom: 0;">
                                 <div class="col s12" style="margin-top: 20px;">
-                                    <button class="btn waves-effect waves-light indigo darken-4 btn-large" style="width: 100%;" type="submit">
+                                    <button class="btn waves-effect waves-light indigo darken-4 btn-large" style="width: 100%;" type="submit" {% if car.stock <= 0 %}disabled{% endif %}>
                                         <i class="material-icons right">send</i>
                                     </button>
                                 </div>
@@ -166,6 +193,7 @@
                 
                 <div class="divider" style="margin: 15px 0;"></div>
                 <div class="grey-text center-align" style="padding: 20px 0;">
+
                     <p>There are no reviews for this model yet. Be the first to review after your purchase!</p>
                 </div>
             </div>

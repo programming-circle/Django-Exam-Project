@@ -60,7 +60,7 @@
             <div class="card-action">
               {% if car.stock > 0 %}
                 {% if user.is_authenticated %}
-                  <a href="{% url 'car_purchase' car.id %}" class="btn waves-effect waves-light blue">Order</a>
+                  <a href="{% url 'car_purchase' car.slug %}" class="btn waves-effect waves-light blue">Order</a>
                 {% else %}
                   <a href="{% url 'login_page' %}" class="btn waves-effect waves-light blue">Order</a>
                 {% endif %}

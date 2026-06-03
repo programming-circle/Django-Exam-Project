@@ -44,7 +44,6 @@ def login_page(request:HttpRequest):
 def login_view(request: HttpRequest):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
-        
         if form.is_valid():
             user = form.get_user()
             login(request, user)
@@ -76,7 +75,7 @@ def logout_view(request: HttpRequest):
 
 @login_required(login_url='login_page')
 def car_purchase(request, slug):
-    car = get_object_or_404(Cars, slug=" ")
+    car = get_object_or_404(Cars, slug=slug)
     return render(request, 'car_purchase.html', {'car': car})
 
 #------ AdminPanel dashboard 
