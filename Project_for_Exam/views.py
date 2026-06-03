@@ -71,8 +71,11 @@ def logout_view(request: HttpRequest):
 
 @login_required(login_url='login_page')
 def car_purchase(request, slug):
-    car = get_object_or_404(Cars, slug=slug)
+    car = get_object_or_404(Cars, slug=slug)    
     return render(request, 'car_purchase.html', {'car': car})
+
+# def order(request):
+
 
 #------ AdminPanel dashboard 
 

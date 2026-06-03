@@ -1,10 +1,11 @@
 from django.db import models
 import uuid #guid
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator , MaxValueValidator
 from django.contrib.auth.models import User
 from django.db.models import Avg
 from django.utils.text import slugify
 from django.conf import settings
+import random
 
 #Autorization libraries: 
 from django.contrib.auth.models import AbstractBaseUser , BaseUserManager, PermissionsMixin
@@ -77,6 +78,33 @@ class Cars(models.Model):
         '''''''''''''''''''''''''''''''''''''''''''''''''''''
         """
     
+def get_random_rgb():
+    return random.randint(0,255)
+
+class ColorPalette(models.Model):
+    red = models.PositiveIntegerField(
+        default=get_random_rgb,
+        validators=[MinValueValidator(0), MaxValueValidator(255)],
+        verbose_name="Red (R)"
+    )
+    green = models.PositiveIntegerField(
+        default=get_random_rgb,
+        validators=[MinValueValidator(0), MaxValueValidator(255)],
+        verbose_name="Green (G)"
+    )
+    blue = models.PositiveIntegerField(
+        default=get_random_rgb,
+        validators=[MinValueValidator(0), MaxValueValidator(255)],
+        verbose_name="Blue (B)"
+    )
+
+    class Meta:
+        verbose_name="color_palette"
+        verbose_name_plural = "color_palettes"
+
+    def __str__(self):
+        return f"{self.name} (RGB:{self.red}, {self.green}, {self.blue})"
+    
 class Order(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_ID = models.UUIDField(primary_key=False, default=uuid.uuid4,editable=False)
@@ -86,9 +114,18 @@ class Order(models.Model):
         related_name='cars', 
         verbose_name="Car"
     )
+    address = models.TextField(null=False, verbose_name="Address")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True) #when car order creating
     closed_at = models.DateTimeField(auto_now=True) #when car order finished by buying or declaying
+    
+    chosen_color = models.ForeignKey(
+        ColorPalette, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        verbose_name="Chosen color"
+    )
     # just for getting price of Car
     def get_price(self):
         if self.car is not None and self.car.price is not None:
