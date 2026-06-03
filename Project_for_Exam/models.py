@@ -127,9 +127,9 @@ class Order(models.Model):
         verbose_name="Chosen color"
     )
     class Meta:
-        db_table = 'Orders'
-        verbose_name = 'Order'
-        verbose_name_plural = 'Orders'
+        db_table = 'orders'
+        verbose_name = 'order'
+        verbose_name_plural = 'orders'
     
     # just for getting price of Car
     def get_price(self):
