@@ -112,7 +112,7 @@ def order(request:HttpRequest, slug: str):
 
     
     form = OrderForm()
-    return render(request, "car_purchase.html", {"car": car, "form": form})
+    return render(request, "main.html", {"car": car, "form": form})
 
 
 
