@@ -77,6 +77,37 @@ class Cars(models.Model):
         '''''''''''''''''''''''''''''''''''''''''''''''''''''
         """
     
+class Order(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_ID = models.UUIDField(primary_key=False, default=uuid.uuid4,editable=False)
+    car = models.ForeignKey(
+        Cars, 
+        on_delete=models.CASCADE, 
+        related_name='cars', 
+        verbose_name="Car"
+    )
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True) #when car order creating
+    closed_at = models.DateTimeField(auto_now=True) #when car order finished by buying or declaying
+    # just for getting price of Car
+    def get_price(self):
+        if self.car is not None and self.car.price is not None:
+            return None
+        return self.car.price
+    class Meta:
+        db_table = 'orders'
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'
+    def __str__(self):
+        return f"""
+        '''''''''''''''''''''''''''''''''''''''''''''''''''''
+        ProductId: {self.id}
+        Car: {self.car}
+        Active status: {self.is_active}
+        Date of order: {self.created_at}
+        Date of finish order: {self.closed_at}
+        '''''''''''''''''''''''''''''''''''''''''''''''''''''
+        """
 
     
 # Custom admin panel \ autorization system block

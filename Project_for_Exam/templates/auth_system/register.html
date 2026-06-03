@@ -44,6 +44,18 @@
             <form method="POST" action="{% url 'register_page' %}">
                 {% csrf_token %}
 
+                {% if form.errors %}
+                    <div class="error-alert-box animated shake">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <p class="error-message">
+                                    {% if field != '__all__' %}{{ field|capfirst }}: {% endif %}{{ error }}
+                                </p>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <div class="django-form-fields">
                     {{ form.as_p }}
                 </div>
