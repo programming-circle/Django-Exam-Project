@@ -47,6 +47,11 @@ def logout_view(request: HttpRequest):
 def auth_page(request:HttpRequest):
     return render(request, "auth.html", {"user":request.user})
 
+@login_required(login_url='login_page')
+def car_purchase(request, slug):
+    car = get_object_or_404(Cars, slug=" ")
+    return render(request, 'car_purchase.html', {'car': car})
+
 #------ AdminPanel dashboard 
 
 def if_staff_user(user:MyUser):
