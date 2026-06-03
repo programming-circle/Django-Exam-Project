@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect , get_object_or_404
 from django.http import HttpRequest, HttpResponseNotAllowed
 from django.contrib import messages
+#from django.db.models.functions import Lower
 
 # Auth libraries here:
 from django.contrib.auth import login , logout , get_user_model
@@ -147,9 +148,38 @@ def staff_dashboard(request):
 
 def main(request):
     cars = Cars.objects.all()
-    
+
+    selected_brand_id = request.GET.get('brand', '')
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
+    search_query = request.GET.get('search', '').strip()
+    sort_order = request.GET.get('sort', '') 
+
+    if selected_brand_id:
+        cars = cars.filter(brand_id=selected_brand_id)
+
+    if price_min:
+        cars = cars.filter(price__gte=price_min)
+
+    if price_max:
+        cars = cars.filter(price__lte=price_max)
+
+    if search_query:
+        cars = cars.filter(name__icontains=search_query)
+
+    if sort_order == 'price_asc':
+        cars = cars.order_by('price')      
+    elif sort_order == 'price_desc':
+        cars = cars.order_by('-price')     
+
     context = {
-        "cars": cars
+        "cars": cars,
+        "brands": Brand.objects.all(),
+        "selected_brand_id": selected_brand_id,
+        "price_min": price_min,
+        "price_max": price_max,
+        "search_query": search_query,
+        "sort_order": sort_order,
     }
     return render(request, "main.html", context)
 
