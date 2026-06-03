@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect , get_object_or_404
 from django.http import HttpRequest, HttpResponseNotAllowed
 from django.contrib import messages
+#from django.db.models.functions import Lower
+from .forms import RegistationForm, CarCreateForm, BrandForm
 
 # Auth libraries here:
 from django.contrib.auth import login , logout , get_user_model
@@ -122,64 +124,112 @@ def if_staff_user(user:MyUser):
 #I decide to make one big method for rendering dashboard and forms on it.
 # user_passes_test - special library shortcut method for testing if user logined , first parameter goes to If_staff_user 
 # and checks if he staff and if no sends him to login page for autorization.
+
+
 @user_passes_test(if_staff_user, login_url='login_page')
 def staff_dashboard(request):
-    empty_form = CarCreateForm()
+    empty_car_form = CarCreateForm()
+    empty_brand_form = BrandForm()
+    empty_user_form = RegistationForm()
 
     if request.method == "POST":
         action = request.POST.get('action')
-        # Create
+        
+        #method for creating a model for car
         if action == "create":
             create_form = CarCreateForm(request.POST, request.FILES)
             if create_form.is_valid():
                 car = create_form.save(commit=False)
-
                 image = request.FILES.get('image')
-                if image:
-                    car.image_path = image
-
+                if image: car.image_path = image
                 car.save()
                 return redirect('dashboard')
             else:
-                print("--- ОШИБКА СОЗДАНИЯ МАШИНЫ ---")
-                print(create_form.errors)
-                empty_form = create_form
-
-        # Update
+                empty_car_form = create_form
+        #update car model
         elif action == "update":
             car_id = request.POST.get('product_id')
             car = get_object_or_404(Cars, id=car_id)
             form = CarCreateForm(request.POST, request.FILES, instance=car)
             if form.is_valid():
                 car = form.save(commit=False)
-
                 image = request.FILES.get('image')
-                if image:
-                    car.image_path = image
+                if image: car.image_path = image
                 car.save()
                 return redirect('dashboard')
-            else:
-                print("--- ОШИБКА СОЗДАНИЯ МАШИНЫ ---")
-                print(form.errors)
-        # Delete   
+        # delete car model
         elif action == "delete":
             car_id = request.POST.get('product_id')
             car = get_object_or_404(Cars, id=car_id)
             car.delete()
             return redirect('dashboard')
+
+        #method for creating a brand for car
+        elif action == "create_brand":
+            brand_form = BrandForm(request.POST)
+            if brand_form.is_valid():
+                brand_form.save()
+                return redirect('dashboard')
+            else:
+                empty_brand_form = brand_form
+        #update brand
+        elif action == "update_brand":
+            brand_id = request.POST.get('brand_id')
+            brand = get_object_or_404(Brand, id=brand_id)
+            form = BrandForm(request.POST, instance=brand)
+            if form.is_valid():
+                form.save()
+                return redirect('dashboard')
+        #delete brand
+        elif action == "delete_brand":
+            brand_id = request.POST.get('brand_id')
+            brand = get_object_or_404(Brand, id=brand_id)
+            brand.delete()
+            return redirect('dashboard')
+
+        #method for creating a model for user
+        elif action == "create_user":
+            user_form = RegistationForm(request.POST)
+            if user_form.is_valid():
+                user_form.save()
+                return redirect('dashboard')
+            else:
+                empty_user_form = user_form
+        #update user model
+        elif action == "update_user":
+            user_id = request.POST.get('user_id')
+            user_obj = get_object_or_404(MyUser, id=user_id)
+            form = RegistationForm(request.POST, instance=user_obj)
+            if form.is_valid():
+                form.save()
+                return redirect('dashboard')
+        #delete user model
+        elif action == "delete_user":
+            user_id = request.POST.get('user_id')
+            user_obj = get_object_or_404(MyUser, id=user_id)
+            if user_obj != request.user:
+                user_obj.delete()
+            return redirect('dashboard')
         
-    # Get is always working without clicking on action.
     cars = Cars.objects.all() 
-    # search things
-    search_query = request.GET.get('search', '') #for searching stuff
+    users = MyUser.objects.all()
+    brands = Brand.objects.all()
+
+    #method for searchings for filter
+    search_query = request.GET.get('search', '')
     if search_query:
         cars = cars.filter(name__icontains=search_query)
+        users = users.filter(full_name__icontains=search_query)
+        brands = brands.filter(name__icontains=search_query)
    
     context = {
         "cars": cars,
+        "brands": brands,
+        "users": users,
         "search_query": search_query,
-        "empty_form": empty_form,
-        "brands": Brand.objects.all(),
+        "empty_car_form": empty_car_form,
+        "empty_brand_form": empty_brand_form,
+        "empty_user_form": empty_user_form,
     }
     
     return render(request, "dashboard.html", context)
@@ -187,9 +237,38 @@ def staff_dashboard(request):
 
 def main(request):
     cars = Cars.objects.all()
-    
+
+    selected_brand_id = request.GET.get('brand', '')
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
+    search_query = request.GET.get('search', '').strip()
+    sort_order = request.GET.get('sort', '') 
+
+    if selected_brand_id:
+        cars = cars.filter(brand_id=selected_brand_id)
+
+    if price_min:
+        cars = cars.filter(price__gte=price_min)
+
+    if price_max:
+        cars = cars.filter(price__lte=price_max)
+
+    if search_query:
+        cars = cars.filter(name__icontains=search_query)
+
+    if sort_order == 'price_asc':
+        cars = cars.order_by('price')      
+    elif sort_order == 'price_desc':
+        cars = cars.order_by('-price')     
+
     context = {
-        "cars": cars
+        "cars": cars,
+        "brands": Brand.objects.all(),
+        "selected_brand_id": selected_brand_id,
+        "price_min": price_min,
+        "price_max": price_max,
+        "search_query": search_query,
+        "sort_order": sort_order,
     }
     return render(request, "main.html", context)
 

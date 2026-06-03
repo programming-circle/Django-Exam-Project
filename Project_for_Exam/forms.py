@@ -37,6 +37,13 @@ class CarCreateForm(forms.ModelForm):
 #     can_delete=False # This i don't understand too, it says "allow delete already existing strings
 # )
 
+class BrandForm(forms.ModelForm):
+    class Meta:
+        model = Brand
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'validate', 'placeholder': 'Введіть назву бренду'}),
+        }
 
 class OrderForm(forms.ModelForm):
     # def __init__(self, *args, **kwargs):

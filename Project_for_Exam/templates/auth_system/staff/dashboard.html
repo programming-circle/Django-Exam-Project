@@ -1,4 +1,4 @@
-{% extends "base_layout.html"%}
+{% extends "base_layout.html" %}
 
 {% block content %}
 <div class="container" style="margin-top: 30px;">
@@ -8,56 +8,168 @@
             <h4>Dashboard panel</h4>
         </div>
         <div class="col s12 m6 right-align">
-            <a href="#createForm" class="btn-large green waves-effect waves-light modal-trigger">
-                <i class="material-icons left">add</i> add Car
+            <a href="#createForm" class="btn green waves-effect waves-light modal-trigger">
+                <i class="material-icons left">add</i> Car
+            </a>
+            <a href="#createBrandForm" class="btn blue waves-effect waves-light modal-trigger">
+                <i class="material-icons left">add</i> Brand
+            </a>
+            <a href="#createUserForm" class="btn purple waves-effect waves-light modal-trigger">
+                <i class="material-icons left">add</i> User
+            </a>
+            <a href=" {% url 'main_page' %}" class="btn purple waves-effect waves-light modal-trigger">
+                <i class="material-icons left">Main</i>Page
             </a>
         </div>
     </div>
 
-    <div class="card-panel">
-        {% if cars %}
-            <table class="striped highlighted responsive-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Slug</th>
-                        <th class="center-align">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in cars %}
-                        <tr>
-                            <td>{{ p.id }}</td>
-                            <td><b>{{ p.name }}</b></td>
-                            <td>{{ p.price }} $ </td>
-                            <td><code>{{ p.slug }}</code></td>
-                            <td class="center-align">
-                                <a href="#updateForm" 
-                                   class="btn-small orange waves-effect waves-light modal-trigger edit-btn"
-                                   data-id="{{ p.id }}"
-                                   data-name="{{ p.name }}"
-                                   data-price="{{ p.price }}"
-                                   data-slug="{{ p.slug }}"
-                                   data-brand="{{ p.brand.id|default:'' }}"
-                                   data-description="{{ p.description }}">
-                                    <i class="material-icons">edit</i>
-                                </a>
-                                <a href="#deleteForm" 
-                                   class="btn-small red waves-effect waves-light modal-trigger delete-btn"
-                                   data-id="{{ p.id }}"
-                                   data-name="{{ p.name }}">
-                                    <i class="material-icons">delete</i>
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p class="flow-text center grey-text">Cars not found , add some.</p>
-        {% endif %}
+    <div class="row">
+        <div class="col s12">
+            <ul class="tabs z-depth-1" style="border-radius: 4px;">
+                <li class="tab col s4"><a class="active indigo-text" href="#cars_tab">Cars ({{ cars|length }})</a></li>
+                <li class="tab col s4"><a class="indigo-text" href="#brands_tab">Brands ({{ brands|length }})</a></li>
+                <li class="tab col s4"><a class="indigo-text" href="#users_tab">Users ({{ users|length }})</a></li>
+            </ul>
+        </div>
+
+        <div id="cars_tab" class="col s12" style="padding-top: 15px;">
+            <div class="card-panel">
+                {% if cars %}
+                    <table class="striped highlighted responsive-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Slug</th>
+                                <th class="center-align">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in cars %}
+                                <tr>
+                                    <td>{{ p.id }}</td>
+                                    <td><b>{{ p.name }}</b></td>
+                                    <td>{{ p.price }} $ </td>
+                                    <td><code>{{ p.slug }}</code></td>
+                                    <td class="center-align">
+                                        <a href="#updateForm" 
+                                           class="btn-small orange waves-effect waves-light modal-trigger edit-btn"
+                                           data-id="{{ p.id }}"
+                                           data-name="{{ p.name }}"
+                                           data-price="{{ p.price }}"
+                                           data-slug="{{ p.slug }}"
+                                           data-brand="{{ p.brand.id|default:'' }}"
+                                           data-description="{{ p.description }}">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                        <a href="#deleteForm" 
+                                           class="btn-small red waves-effect waves-light modal-trigger delete-btn"
+                                           data-id="{{ p.id }}"
+                                           data-name="{{ p.name }}">
+                                            <i class="material-icons">delete</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="flow-text center grey-text">Cars not found, add some.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="brands_tab" class="col s12" style="padding-top: 15px;">
+            <div class="card-panel">
+                {% if brands %}
+                    <table class="striped highlighted responsive-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Brand Name</th>
+                                <th class="center-align">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for brand in brands %}
+                                <tr>
+                                    <td>{{ brand.id }}</td>
+                                    <td><b>{{ brand.name }}</b></td>
+                                    <td class="center-align">
+                                        <a href="#updateBrandForm" 
+                                           class="btn-small orange waves-effect waves-light modal-trigger edit-brand-btn"
+                                           data-id="{{ brand.id }}"
+                                           data-name="{{ brand.name }}">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                        <a href="#deleteBrandForm" 
+                                           class="btn-small red waves-effect waves-light modal-trigger delete-brand-btn"
+                                           data-id="{{ brand.id }}"
+                                           data-name="{{ brand.name }}">
+                                            <i class="material-icons">delete</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="flow-text center grey-text">Brands not found, add some.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="users_tab" class="col s12" style="padding-top: 15px;">
+            <div class="card-panel">
+                {% if users %}
+                    <table class="striped highlighted responsive-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Full Name</th>
+                                <th>Username</th>
+                                <th>Staff Status</th>
+                                <th class="center-align">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in users %}
+                                <tr>
+                                    <td>{{ u.id }}</td>
+                                    <td><b>{{ u.full_name }}</b></td>
+                                    <td>{{ u.username }}</td>
+                                    <td>
+                                        {% if u.is_staff %}
+                                            <span class="badge green white-text" style="float:none; border-radius:2px;">Admin/Staff</span>
+                                        {% else %}
+                                            <span class="badge grey white-text" style="float:none; border-radius:2px;">User</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="center-align">
+                                        <a href="#updateUserForm" 
+                                           class="btn-small orange waves-effect waves-light modal-trigger edit-user-btn"
+                                           data-id="{{ u.id }}"
+                                           data-fullname="{{ u.full_name }}"
+                                           data-isstaff="{{ u.is_staff|yesno:'true,false' }}">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                        <a href="#deleteUserForm" 
+                                           class="btn-small red waves-effect waves-light modal-trigger delete-user-btn"
+                                           data-id="{{ u.id }}"
+                                           data-name="{{ u.full_name }}">
+                                            <i class="material-icons">delete</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="flow-text center grey-text">Users not found.</p>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
 
@@ -67,14 +179,14 @@
         <input type="hidden" name="action" value="create">
         <div class="modal-content">
             <h4>Add new car</h4>
-            {% if empty_form.non_field_errors %}
+            {% if empty_car_form.non_field_errors %}
                 <div class="red-text">
-                    {% for error in empty_form.non_field_errors %}
+                    {% for error in empty_car_form.non_field_errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 </div>
             {% endif %}
-            <p><label>Name:</label>{{ empty_form.name }}</p>
+            <p><label>Name:</label>{{ empty_car_form.name }}</p>
             <p>
                 <label for="id_brand">Brand:</label>
                 <select name="brand" id="id_brand" class="browser-default" required>
@@ -84,10 +196,10 @@
                     {% endfor %}
                 </select>
             </p>
-            <p><label>Slug:</label>{{ empty_form.slug }}</p>
-            <p><label>Description:</label>{{ empty_form.description }}</p>
-            <p><label>Price:</label>{{ empty_form.price }}</p>
-            <p><label>Discount Price:</label>{{ empty_form.discount_price }}</p>
+            <p><label>Slug:</label>{{ empty_car_form.slug }}</p>
+            <p><label>Description:</label>{{ empty_car_form.description }}</p>
+            <p><label>Price:</label>{{ empty_car_form.price }}</p>
+            <p><label>Discount Price:</label>{{ empty_car_form.discount_price }}</p>
             <p>
                 <label>Stock:</label>
                 <input type="number" name="stock" min="0" required>
@@ -155,14 +267,127 @@
     </form>
 </div>
 
-<script>
-    // A little play with Java Script
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        var elems = document.querySelectorAll('.modal');
-        var instances = M.Modal.init(elems);
 
-        
+<div id="createBrandForm" class="modal">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create_brand">
+        <div class="modal-content">
+            <h4>Add new brand</h4>
+            <p>
+                <label>Brand Name:</label>
+                <input type="text" name="name" required placeholder="e.g. BMW, Toyota">
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
+            <button type="submit" class="waves-effect waves-green btn blue">Create</button>
+        </div>
+    </form>
+</div>
+
+<div id="updateBrandForm" class="modal">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="update_brand">
+        <input type="hidden" name="brand_id" id="update_brand_id">
+        <div class="modal-content">
+            <h4>Update brand</h4>
+            <p>
+                <label>Brand Name:</label>
+                <input type="text" name="name" id="update_brand_name" required>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
+            <button type="submit" class="waves-effect waves-green btn orange">Save</button>
+        </div>
+    </form>
+</div>
+
+<div id="deleteBrandForm" class="modal">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete_brand">
+        <input type="hidden" name="brand_id" id="delete_brand_id">
+        <div class="modal-content">
+            <h4>Delete Brand?</h4>
+            <p>Are you sure you want to delete brand <b id="delete_brand_name"></b>? This might affect cars linked to it.</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
+            <button type="submit" class="waves-effect waves-green btn red">Delete</button>
+        </div>
+    </form>
+</div>
+
+
+<div id="createUserForm" class="modal">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create_user">
+        <div class="modal-content">
+            <h4>Add new user</h4>
+            {{ empty_user_form.as_p }}
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
+            <button type="submit" class="waves-effect waves-green btn purple">Create User</button>
+        </div>
+    </form>
+</div>
+
+<div id="updateUserForm" class="modal">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="update_user">
+        <input type="hidden" name="user_id" id="update_user_id">
+        <div class="modal-content">
+            <h4>Update user staff status</h4>
+            <p>
+                <label>Full Name:</label>
+                <input type="text" name="full_name" id="update_user_fullname" required>
+            </p>
+            <p style="margin-top: 20px;">
+                <label>
+                    <input type="checkbox" name="is_staff" id="update_user_isstaff" value="true">
+                    <span>Give Staff/Admin Access</span>
+                </label>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
+            <button type="submit" class="waves-effect waves-green btn orange">Save</button>
+        </div>
+    </form>
+</div>
+
+<div id="deleteUserForm" class="modal">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete_user">
+        <input type="hidden" name="user_id" id="delete_user_id">
+        <div class="modal-content">
+            <h4>Delete User?</h4>
+            <p>Are you sure you want to completely remove user <b id="delete_user_name"></b>?</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
+            <button type="submit" class="waves-effect waves-green btn red">Delete User</button>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var modalElems = document.querySelectorAll('.modal');
+        M.Modal.init(modalElems);
+
+        var tabElems = document.querySelectorAll('.tabs');
+        M.Tabs.init(tabElems);
+
         document.querySelectorAll('.edit-btn').forEach(function(button) {
             button.addEventListener('click', function() {
                 document.getElementById('update_product_id').value = this.getAttribute('data-id');
@@ -170,17 +395,13 @@
                 document.getElementById('update_price').value = this.getAttribute('data-price');
                 document.getElementById('update_slug').value = this.getAttribute('data-slug');
                 
-                // temp fix if brand doesn't work right.
                 var brandId = this.getAttribute('data-brand');
                 document.getElementById('update_brand').value = brandId ? brandId : "";
                 
                 document.getElementById('update_description').value = this.getAttribute('data-description');
-
-                document.getElementById('update_image_name').innerText =
-                this.getAttribute('data-image-name') || "No image";
+                document.getElementById('update_image_name').innerText = this.getAttribute('data-image-name') || "No image";
                
                 M.updateTextFields();
-               
             });
         });
 
@@ -188,6 +409,40 @@
             button.addEventListener('click', function() {
                 document.getElementById('delete_product_id').value = this.getAttribute('data-id');
                 document.getElementById('delete_product_name').innerText = this.getAttribute('data-name');
+            });
+        });
+
+        document.querySelectorAll('.edit-brand-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                document.getElementById('update_brand_id').value = this.getAttribute('data-id');
+                document.getElementById('update_brand_name').value = this.getAttribute('data-name');
+                M.updateTextFields();
+            });
+        });
+
+        document.querySelectorAll('.delete-brand-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                document.getElementById('delete_brand_id').value = this.getAttribute('data-id');
+                document.getElementById('delete_brand_name').innerText = this.getAttribute('data-name');
+            });
+        });
+
+        document.querySelectorAll('.edit-user-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                document.getElementById('update_user_id').value = this.getAttribute('data-id');
+                document.getElementById('update_user_fullname').value = this.getAttribute('data-fullname');
+                
+                var isStaff = this.getAttribute('data-isstaff') === 'true';
+                document.getElementById('update_user_isstaff').checked = isStaff;
+                
+                M.updateTextFields();
+            });
+        });
+
+        document.querySelectorAll('.delete-user-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                document.getElementById('delete_user_id').value = this.getAttribute('data-id');
+                document.getElementById('delete_user_name').innerText = this.getAttribute('data-name');
             });
         });
     });
