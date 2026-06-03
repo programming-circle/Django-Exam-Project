@@ -10,10 +10,14 @@
     <title>Django</title>
 </head>
 <body>
+    {% block register %}{% endblock register %}
+    
     {% block navbar %}{% endblock %}
     <main>
         {% block content %}{% endblock %}
     </main>
+    
+
     <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
 </body>
 </html>

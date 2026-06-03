@@ -85,6 +85,21 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
+        
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 7,  
+        }
+    },
+    {
+        
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+    {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
@@ -114,5 +129,5 @@ STATICFILES_DIRS = [
 ]
 AUTH_USER_MODEL = 'Project_for_Exam.MyUser'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/assets/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'assets')

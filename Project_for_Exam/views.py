@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect , get_object_or_404
 from django.http import HttpRequest, HttpResponseNotAllowed
-
+from django.contrib import messages
 
 # Auth libraries here:
-from django.contrib.auth import login , logout
+from django.contrib.auth import login , logout , get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required , user_passes_test
 from .forms import RegistationForm, CarCreateForm 
@@ -12,7 +12,7 @@ from .models import MyUser , Cars, Brand
  
 
 def register_page( request: HttpRequest):
-    return render(request, "register.html", {"form": RegistationForm})
+    return render(request, "register.html", {"form": RegistationForm()})
 
 def register_view(request: HttpRequest):
     if request.method == "POST":
@@ -20,22 +20,49 @@ def register_view(request: HttpRequest):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect("auth_page")
-        else: return redirect("register_page")
+            return redirect("main_page")
+        else:
+            error_text = form.non_field_errors().as_text()
+            if not error_text:
+                error_text = "; ".join(
+                    f"{field}: {' '.join(errors)}"
+                    for field, errors in form.errors.items()
+                )
+            if error_text:
+                error_text = error_text.lstrip('* ').strip()
+            else:
+                error_text = "Invalid registration data. Please check the form and try again."
+            messages.error(request, error_text)
+            return render(request, "register.html", {"form": form})
     return HttpResponseNotAllowed(["POST",])
+
 def login_page(request:HttpRequest):
-    if request.user.is_authenticated : return redirect("auth_page")
-    return render(request, "register.html", {"form":AuthenticationForm,
+    if request.user.is_authenticated : return redirect("main_page")
+    return render(request, "register.html", {"form": AuthenticationForm(),
                                             "button":"Login","action":"login-view"})
 
 def login_view(request: HttpRequest):
     if request.method == "POST":
-        form = AuthenticationForm(request, data = request.POST)
+        form = AuthenticationForm(request, data=request.POST)
+        
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect("auth_page")
-        else: return redirect("login_page")
+            return redirect("main_page")
+        else: 
+            error_text = form.non_field_errors().as_text()
+            if not error_text:
+                error_text = "; ".join(
+                    f"{field}: {' '.join(errors)}"
+                    for field, errors in form.errors.items()
+                )
+            if error_text:
+                error_text = error_text.lstrip('* ').strip()
+            else:
+                error_text = "Invalid username or password. Please try again."
+            messages.error(request, error_text)
+            return render(request, "register.html", {"form": form, "button": "Login"})
+            
     return HttpResponseNotAllowed(["POST",])
 
 
@@ -43,9 +70,9 @@ def logout_view(request: HttpRequest):
     logout(request)
     return redirect("login_page")
 
-@login_required
-def auth_page(request:HttpRequest):
-    return render(request, "auth.html", {"user":request.user})
+# @login_required
+# def auth_page(request:HttpRequest):
+#     return render(request, "main.html", {"user":request.user})
 
 #------ AdminPanel dashboard 
 
