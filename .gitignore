@@ -1,4 +1,8 @@
 db.sqlite3
 .env
 venv/
+<<<<<<< HEAD
 __pycache__/
+=======
+pycache/
+>>>>>>> 528a3fdbcb45cc60e338ac2a6902ce2e469588bd

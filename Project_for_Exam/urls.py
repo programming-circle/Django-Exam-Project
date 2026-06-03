@@ -12,7 +12,7 @@ urlpatterns = [
     path('logout/', views.logout_view,name="logout"),
 
     path('main/', views.main, name="main_page"),
-
+    path('buy/<uuid:slug>/', views.car_purchase, name='car_purchase'),
     #staff urls
     path('staff/dashboard/',views.staff_dashboard,name="dashboard")
 
