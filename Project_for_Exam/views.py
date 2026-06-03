@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.contrib.auth import login , logout , get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required , user_passes_test
-from .forms import RegistationForm, CarCreateForm 
-from .models import MyUser , Cars, Brand
+from .forms import RegistationForm, CarCreateForm , OrderForm
+from .models import MyUser , Cars, Brand , Order ,ColorPalette
 # ------------- Auth section ----------------
  
 
@@ -64,7 +64,7 @@ def login_view(request: HttpRequest):
 def logout_view(request: HttpRequest):
     logout(request)
     return redirect("login_page")
-
+        
 
 
 # Car page
@@ -74,7 +74,44 @@ def car_purchase(request, slug):
     car = get_object_or_404(Cars, slug=slug)    
     return render(request, 'car_purchase.html', {'car': car})
 
-# def order(request):
+def order(request:HttpRequest, slug: str):
+    car = get_object_or_404(Cars, slug=slug)
+    if request.method == "POST":
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            if request.user.is_authenticated:
+                order.user_ID = request.user.id
+
+            hex_color = request.POST.get('chosen_color', '#1A237E').lstrip('#')
+            # Convert HEX to RGB
+            try:
+                r = int(hex_color[0:2], 16)
+                g = int(hex_color[2:4], 16)
+                b = int(hex_color[4:6], 16)
+            except Exception:
+                r, g, b = (26, 35, 126)  # fallback color
+
+            color_obj, created = ColorPalette.objects.get_or_create(
+                red=r, green=g, blue=b
+            )
+            order.chosen_color = color_obj
+            order.car = car
+            order.save()
+            context = {
+                "message": "Order succesfully created",
+                "car": car,
+                "form": OrderForm(),
+            }
+            return render(request, "car_purchase.html", context)
+
+        
+        return render(request, "car_purchase.html", {"car": car, "form": form})
+
+    
+    form = OrderForm()
+    return render(request, "car_purchase.html", {"car": car, "form": form})
+
 
 
 #------ AdminPanel dashboard 

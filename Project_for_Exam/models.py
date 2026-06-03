@@ -99,11 +99,12 @@ class ColorPalette(models.Model):
     )
 
     class Meta:
+        db_table = "color_palettes"
         verbose_name="color_palette"
         verbose_name_plural = "color_palettes"
 
     def __str__(self):
-        return f"{self.name} (RGB:{self.red}, {self.green}, {self.blue})"
+        return f"Color (RGB:{self.red}, {self.green}, {self.blue})"
     
 class Order(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -126,15 +127,17 @@ class Order(models.Model):
         blank=True,
         verbose_name="Chosen color"
     )
+    class Meta:
+        db_table = 'Orders'
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'
+    
     # just for getting price of Car
     def get_price(self):
         if self.car is not None and self.car.price is not None:
             return None
         return self.car.price
-    class Meta:
-        db_table = 'orders'
-        verbose_name = 'Order'
-        verbose_name_plural = 'Orders'
+    
     def __str__(self):
         return f"""
         '''''''''''''''''''''''''''''''''''''''''''''''''''''

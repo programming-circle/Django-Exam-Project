@@ -2,7 +2,7 @@ from django import forms
 from django.forms import  ModelForm
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import MyUser , Cars , Brand
+from .models import MyUser , Cars , Brand ,Order , ColorPalette
 
 
 class CarCreateForm(forms.ModelForm):
@@ -37,6 +37,17 @@ class CarCreateForm(forms.ModelForm):
 #     can_delete=False # This i don't understand too, it says "allow delete already existing strings
 # )
 
+
+class OrderForm(forms.ModelForm):
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['chosen_color'].widget = forms.Select(attrs={'class':'browser-default'})
+    class Meta:
+        model=Order
+        fields=['address']
+        widgets = {
+            'address': forms.TextInput(attrs={'class':'validate'})
+        }
 
 # Update
 class UserChangeForm(ModelForm):

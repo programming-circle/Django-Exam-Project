@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('main/', views.main, name="main_page"),
     path('buy/<slug:slug>/', views.car_purchase, name='car_purchase'),
+    path('buy/<slug:slug>/order/', views.order, name='order'),
     #staff urls
     path('staff/dashboard/',views.staff_dashboard,name="dashboard")
 
