@@ -11,7 +11,15 @@ from .models import MyUser , Cars, Brand
 # ------------- Auth section ----------------
  
 
-def register_page( request: HttpRequest):
+def register_page(request: HttpRequest):
+    if request.method == "POST":
+        form = RegistationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("main_page")
+        return render(request, "register.html", {"form": form})
+
     return render(request, "register.html", {"form": RegistationForm()})
 
 def register_view(request: HttpRequest):
@@ -21,19 +29,7 @@ def register_view(request: HttpRequest):
             user = form.save()
             login(request, user)
             return redirect("main_page")
-        else:
-            error_text = form.non_field_errors().as_text()
-            if not error_text:
-                error_text = "; ".join(
-                    f"{field}: {' '.join(errors)}"
-                    for field, errors in form.errors.items()
-                )
-            if error_text:
-                error_text = error_text.lstrip('* ').strip()
-            else:
-                error_text = "Invalid registration data. Please check the form and try again."
-            messages.error(request, error_text)
-            return render(request, "register.html", {"form": form})
+        return render(request, "register.html", {"form": form})
     return HttpResponseNotAllowed(["POST",])
 
 def login_page(request:HttpRequest):
@@ -70,9 +66,9 @@ def logout_view(request: HttpRequest):
     logout(request)
     return redirect("login_page")
 
-# @login_required
-# def auth_page(request:HttpRequest):
-#     return render(request, "main.html", {"user":request.user})
+
+
+# Car page
 
 @login_required(login_url='login_page')
 def car_purchase(request, slug):
