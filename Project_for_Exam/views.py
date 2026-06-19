@@ -216,7 +216,7 @@ def staff_dashboard(request):
     brands = Brand.objects.all()
 
     #method for searchings for filter
-    search_query = request.GET.get('search', '')
+    search_query = request.GET.get('search', '') #getting from main site info and searching by is.
     if search_query:
         cars = cars.filter(name__icontains=search_query)
         users = users.filter(full_name__icontains=search_query)
